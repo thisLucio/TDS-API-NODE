@@ -19,4 +19,4 @@ app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute);
 
 
-app.listen(5000, () => console.log('Server ta rodando menó'));
+app.listen(process.env.PORT || 5000, () => console.log('Server ta rodando menó'));
