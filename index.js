@@ -10,7 +10,7 @@ const { application } = require('express');
 dotenv.config();
 
 //Connect to DB
-mongoose.connect(process.env.DB_CONNECT,{ useNewUrlParser: true }, () => console.log('Conectou no banco menó'));
+mongoose.connect('mongodb+srv://robso:123@api-jwt.717ba.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{ useNewUrlParser: true }, () => console.log('Conectou no banco menó'));
 
 //Middleware
 app.use(express.json());
