@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 //Import Routes
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/posts');
+const servicoRoute = require('./routes/servicoRoute');
 const { application } = require('express');
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(express.json());
 //Route Middleware
 app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute);
+app.use('/api/serviceRoute', servicoRoute);
 
 
 app.listen(process.env.PORT || 5000, () => console.log('Server ta rodando menó'));
