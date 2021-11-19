@@ -18,7 +18,7 @@ app.use(express.json());
 //Route Middleware
 app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute);
-app.use('/api/serviceRoute', servicoRoute);
+app.use('/api', servicoRoute);
 
 
 app.listen(process.env.PORT || 5000, () => console.log('Server ta rodando menó'));
