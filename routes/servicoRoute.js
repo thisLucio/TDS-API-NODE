@@ -50,5 +50,30 @@ router.get('/servico', verify, function (req, res) {
     });
 });
 
+//FIND BY ID 
+router.get('/servico/:id', verify, function (req, res){
+    const token = req.header('auth-token');
+    const decodeToken = jwt.decode(token);
+   
+    const userId = decodeToken._id;
+    Servico.findOne({user_id: userId, _id: req.params.id}, function (err, servico){
+            if(err){
+                res.status(400).send(error.details[0].message);
+            next();
+            }
+            const retornoServico = servico;
+
+            if(retornoServico != null){
+                res.json(servico);
+            }
+            else {
+                return res.status(400).send('Serviço não encontrado');
+            }
+       });
+       
+        
+    });
+
+
 
 module.exports = router;
