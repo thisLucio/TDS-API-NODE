@@ -32,6 +32,18 @@ const servicoValidation = data => {
     return schema.validate(data);
 }
 
+// Prestador Validation
+const prestadorValidation = data => {
+    const schema = Joi.object({
+        pr_name: Joi.string().min(2).max(40).required(),
+        pr_fone : Joi.string().min(12).required(),
+        pr_email: Joi.string().min(6).required(),
+        pr_status: Joi.string().min(1).required()
+    });
+    return schema.validate(data);
+}
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.servicoValidation = servicoValidation;
+module.exports.prestadorValidation = prestadorValidation;

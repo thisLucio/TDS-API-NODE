@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/posts');
 const servicoRoute = require('./routes/servicoRoute');
+const prestadoresRoute = require('./routes/prestadoresRoute');
 const { application } = require('express');
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute);
 app.use('/api', servicoRoute);
+app.use('/api', prestadoresRoute);
 
 
 app.listen(process.env.PORT || 5000, () => console.log('Server ta rodando menó'));
