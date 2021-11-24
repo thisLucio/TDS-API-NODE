@@ -109,4 +109,5 @@ router.delete('/prestadores/:id', verify, async (req, res) => {
           return res.status(400).send('Prestador não encontrado');
       }
 })
+
 module.exports = router;
