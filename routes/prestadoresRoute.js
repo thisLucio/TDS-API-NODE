@@ -18,10 +18,10 @@ let verifyUser = function(req, res){
 //INSERIR PRESTADOR
 router.post('/prestadores', verify, async (req, res) => {
 
-    const {error } = prestadorValidation(req.body)
-    if(error) return res.status(400).send(error.details[0].message);
+    // const {error } = prestadorValidation(req.body)
+    // if(error) return res.status(400).send(error.details[0].message);
 
-    const userId = verifyUser(req, res);
+    // const userId = verifyUser(req, res);
 
 
     //CREATE A NEW PRESTADOR
@@ -30,7 +30,10 @@ router.post('/prestadores', verify, async (req, res) => {
         pr_fone: req.body.pr_fone,
         pr_email: req.body.pr_email,
         pr_status: req.body.pr_status,
-        user_id: userId
+        pr_description: req.body.pr_description,
+        pr_city: req.body.pr_city,
+        pr_uf: req.body.pr_uf
+        // user_id: userId
 
     });
     try {
@@ -42,8 +45,10 @@ router.post('/prestadores', verify, async (req, res) => {
 });
 //FIND ALL
 router.get('/prestadores', verify, function(req, res){
-  const userId = verifyUser(req, res);
-  Prestadores.find({user_id: userId}, function (err, prestadores) {
+//   const userId = verifyUser(req, res);
+  Prestadores.find(
+    //   {user_id: userId},
+     function (err, prestadores) {
     if(err){
       res.status(400).send(error.details[0].message);
       next();
@@ -54,8 +59,11 @@ router.get('/prestadores', verify, function(req, res){
 
 //FIND BY ID
 router.get('/prestadores/:id', verify, function (req, res){
-    const userId = verifyUser(req, res);
-    Prestadores.findOne({user_id: userId, _id: req.params.id}, function(err, prestador){
+    // const userId = verifyUser(req, res);
+    Prestadores.findOne(
+        {
+            // user_id: userId,
+             _id: req.params.id}, function(err, prestador){
       if(err){
           res.status(400).send(error.details[0].message);
       next();
@@ -73,11 +81,17 @@ router.get('/prestadores/:id', verify, function (req, res){
 
 // PUT UPDATE PRESTADOR
 router.put('/prestadores/:id', verify, async (req, res) => {
-    const userId = verifyUser(req, res);
-    const conditions = { _id: req.params.id, user_id: userId};
+    // const userId = verifyUser(req, res);
+    const conditions = { _id: req.params.id
+        // , user_id: userId
+    };
     try {
         const savedPrestador = await Prestadores.updateOne(conditions, req.body);
-        Prestadores.findOne({user_id: userId, _id: req.params.id}, function (err, prestador){
+        Prestadores.findOne(
+            {
+                // user_id: userId,
+                 _id: req.params.id
+            }, function (err, prestador){
             if(err){
                 res.status(400).send(error.details[0].message);
             next();
@@ -99,7 +113,7 @@ router.put('/prestadores/:id', verify, async (req, res) => {
 
 //DELETE PRESTADOR
 router.delete('/prestadores/:id', verify, async (req, res) => {
-      const userId = verifyUser(req, res);
+    //   const userId = verifyUser(req, res);
       try {
             Prestadores.findByIdAndDelete({_id: req.params.id}).exec().then(doc => {
               if(!doc) { return res.status(404).send('Prestador não encontrado').end();}

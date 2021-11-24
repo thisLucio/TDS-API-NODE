@@ -27,7 +27,8 @@ const servicoValidation = data => {
         service_name: Joi.string().min(4).required(),
         service_status: Joi.string().min(2).required(),
         service_descricao: Joi.string().min(2).required(),
-        service_tipo: Joi.string().min(3).required()
+        service_tipo: Joi.string().min(3).required(),
+        pr_id: Joi.string().min(2).required()
     });
     return schema.validate(data);
 }
@@ -38,7 +39,10 @@ const prestadorValidation = data => {
         pr_name: Joi.string().min(2).max(40).required(),
         pr_fone : Joi.string().min(12).required(),
         pr_email: Joi.string().min(6).required(),
-        pr_status: Joi.string().min(1).required()
+        pr_status: Joi.string().min(1).required(),
+        pr_description: Joi.string().max(255).required(),
+        pr_city: Joi.string().max(40).required(),
+        pr_uf: Joi.string().max(3).required()
     });
     return schema.validate(data);
 }
