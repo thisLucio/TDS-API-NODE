@@ -4,9 +4,10 @@ const Prestadores = require('../model/Prestadores');
 const Servico = require('../model/Servico');
 const User = require('../model/User');
 const verify = require('./verifyToken');
-const { solicitacaoValidation } = require ('../validation');
+const { solicitacaoValidation, avaliarValidation } = require ('../validation');
 const { Mongoose } = require('mongoose');
 const jwt = require('jsonwebtoken');
+const Avaliar = require('../model/Avaliar');
 
 
 
@@ -101,4 +102,62 @@ router.delete('/pedido/:id', verify, async (req, res) => {
         return res.status(400).send('Pedido não encontrado');
     }
 });
+
+//AVALIAR PEDIDO
+router.post('/pedido/avaliar/:id', verify, async (req, res) =>{ 
+    const {error } = avaliarValidation(req.body)
+    if(error) return res.status(400).send(error.details[0].message);
+
+    const userId = verifyUser(req, res);
+
+    Solicitacao.findOne({ user_id: userId, _id: req.params.id}, function(err, pedido){
+        if(err){
+            res.status(400).send(error.details[0].message);
+        next();
+        }
+        const retornoPedidos = pedido;
+        if(retornoPedidos != null){
+            const avaliacao = new Avaliar({
+                comentario_pedido: req.body.comentario_pedido,
+                stars: req.body.stars,
+                pedido_id: req.params.id
+            });
+            try {
+                const savedAvaliar = avaliacao.save();
+                res.status(200).send('Avaliação enviada!');
+           } catch (error) {
+               res.status(400).send(error);
+           }
+        }
+    });
+});
+
+//BUSCAR PEDIDO AVALIADO
+router.get('/pedidos/avaliado/:id', verify, function(req, res){
+    const userId = verifyUser(req, res);
+    Solicitacao.findOne({ user_id: userId, _id: req.params.id}, function(err, pedido){
+        if(err){
+            res.status(400).send(error.details[0].message);
+        next();
+        }
+        const retornoPedidos = pedido;
+        if(retornoPedidos != null){
+            Servico.findOne({ _id: retornoPedidos.servico_id}, function (err, servico){
+                const retornoServico = servico;
+                Prestadores.findById({_id: retornoServico.pr_id}, (err, prestador) => {
+                    Avaliar.find({pedido_id: req.params.id }, (err, avaliar) => {
+                        const teste1 = new Array;
+                        let mergeObj = teste1.concat(pedido).concat(servico).concat(prestador).concat(avaliar);
+                       res.send(mergeObj);
+                    });
+
+                });
+            });
+        }
+        else {
+            return res.status(400).send('Pedido não encontrado');
+        }
+    });
+});
+
 module.exports = router;

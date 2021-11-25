@@ -76,3 +76,4 @@ module.exports.loginValidation = loginValidation;
 module.exports.servicoValidation = servicoValidation;
 module.exports.prestadorValidation = prestadorValidation;
 module.exports.solicitacaoValidation = solicitacaoValidation;
+module.exports.avaliarValidation = avaliarValidation;

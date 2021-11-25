@@ -132,7 +132,32 @@ router.delete('/servico/:id', verify, async (req, res) => {
     }catch(error){
         return res.status(400).send('Serviço não encontrado');
     }
-})
+});
+
+//Buscar pelo nome
+router.get('/servicos/nome/:nome', verify, async (req, res, next) => {
+    Servico.find({service_name: req.params.nome}, function (err, servicos) {
+        if(err){
+            res.status(400).send(error.details[0].message);
+            next();
+        }   
+        
+        res.send(servicos);
+    });
+
+});
+
+//Buscar pelo prestador
+router.get('/servicos/prestador/:id', verify, async (req, res, next) => {
+    Servico.find({pr_id: req.params.id},function (err, servicos) {
+        if(err){
+            res.status(400).send(error.details[0].message);
+            next();
+        }   
+        
+        res.send(servicos);
+    });
+});
 
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const { number } = require('@hapi/joi');
 const mongoose = require('mongoose');
 
-const solicitacaoSchema = new mongoose.Schema({
+const avaliarSchema = new mongoose.Schema({
     comentario_pedido: {
         type: String,
         required: true,
@@ -19,7 +19,7 @@ const solicitacaoSchema = new mongoose.Schema({
         min: 2,
     },
 
-    servico_id: {
+    pedido_id: {
         type: String,
         required: false,
         min: 2,
