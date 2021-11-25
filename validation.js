@@ -47,7 +47,32 @@ const prestadorValidation = data => {
     return schema.validate(data);
 }
 
+// Solicitacao Validation
+const solicitacaoValidation = data => {
+    const schema = Joi.object({
+        descricao_pedido: Joi.string().max(255).required(),
+        obs_prestador_pedido:Joi.string().max(160).required(),
+        pcd_obs_pedido: Joi.string().max(40).required(),
+        endereco_pedido: Joi.string().max(80).required(),
+        cep_pedido: Joi.string().max(15).required(),
+        cidade_pedido: Joi.string().max(30).required(),
+        complemento: Joi.string().max(30).required(),
+        localizacao_pedido: Joi.boolean().required(),
+        servico_id: Joi.string().min(2).required()
+    });
+    return schema.validate(data);
+}
+
+// Avaliar Validation
+const avaliarValidation = data => {
+    const schema = Joi.object({
+        comentario_pedido: Joi.string().max(255).required(),
+        stars: Joi.number().max(5).required()
+    });
+    return schema.validate(data);
+}
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.servicoValidation = servicoValidation;
 module.exports.prestadorValidation = prestadorValidation;
+module.exports.solicitacaoValidation = solicitacaoValidation;
