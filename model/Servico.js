@@ -25,9 +25,9 @@ const servicoSchema = new mongoose.Schema({
         max: 30,
         min: 3
     },
-    user_id: {
+    pr_id: {
         type: String,
-        required: false,
+        required: true,
         min: 2,
     },
     date: {

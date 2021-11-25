@@ -23,6 +23,22 @@ const prestadorSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
+    pr_description: {
+        type: String,
+        required: true,
+        max: 255
+    },
+    pr_city: {
+        type: String,
+        required: true,
+        max: 40
+    },
+    pr_uf: {
+        type: String,
+        required: true,
+        max: 3
+    },
+    
     user_id: {
         type: String,
         required: false,
