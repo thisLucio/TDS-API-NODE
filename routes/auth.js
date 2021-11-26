@@ -47,9 +47,29 @@ router.post('/login', async (req, res) => {
     
     //CREATE AND ASSIGN A TOKEN
     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).send(token);
-  
- 
+    res.header('auth-token', token);
+
+    const decodeToken = jwt.decode(token);
+
+    const userId = decodeToken._id;
+    try{
+        User.findById({_id: userId},  function (err, usuario){
+            if(err){
+                res.status(400).send(error.details[0].message);
+                next();
+              }
+              res.json({
+                "auth": token,
+                "username": usuario.username
+            });
+               
+        });
+        
+    }
+    catch(err){
+        res.status(400).send('Tem algo errado, só não sei oq é');
+    }
+   
 });
 
 module.exports = router;
