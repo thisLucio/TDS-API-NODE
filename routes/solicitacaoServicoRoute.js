@@ -103,6 +103,34 @@ router.delete('/pedido/:id', verify, async (req, res) => {
     }
 });
 
+//ATUALIZAR PEDIDO 
+
+router.put('/pedido/:id', verify, async (req, res) =>{
+
+    const conditions = { _id: req.params.id};
+
+    try {
+        const savedPedido = await Solicitacao.updateOne(conditions, req.body);
+        Solicitacao.findOne({ _id: req.params.id}, function (err, pedido){
+            if(err){
+                res.status(400).send(error.details[0].message);
+            next();
+            }
+            const retornoPedidos = pedido;
+
+            if(retornoPedidos != null){
+                res.json(pedido);
+            }
+            else {
+                return res.status(400).send('Pedido não encontrado');
+            }
+       });
+
+   } catch (error) {
+       res.status(400).send(error);
+   }
+
+});
 //AVALIAR PEDIDO
 router.post('/pedido/avaliar/:id', verify, async (req, res) =>{ 
     const {error } = avaliarValidation(req.body)
@@ -147,6 +175,35 @@ router.delete('/pedidos/avaliado/:id', verify, function(req, res){
         return res.status(400).send('Pedido não encontrado');
     }
     
+});
+
+//ATUALIZAR AVALIAÇÃO 
+
+router.put('/pedidos/avaliado/:id', verify, async (req, res) =>{
+
+    const conditions = { pedido_id: req.params.id};
+
+    try {
+        const savedAval = await Avaliar.updateOne(conditions, req.body);
+        Avaliar.findOne({ pedido_id: req.params.id}, function (err, avaliacao){
+            if(err){
+                res.status(400).send(error.details[0].message);
+            next();
+            }
+            const retornoAval = avaliacao;
+
+            if(retornoAval != null){
+                res.json(avaliacao);
+            }
+            else {
+                return res.status(400).send('Avaliação não encontrada');
+            }
+       });
+
+   } catch (error) {
+       res.status(400).send(error);
+   }
+
 });
 
 //BUSCAR PEDIDO AVALIADO
