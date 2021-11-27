@@ -22,6 +22,7 @@ router.post('/servico', verify, async (req, res) => {
         pr_id: req.body.pr_id
 
     });
+    
     try {
         const savedServico = await servico.save();
         res.send({savedServico});
