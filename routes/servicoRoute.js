@@ -61,8 +61,12 @@ router.get('/servico/:id', verify, function (req, res){
 
             if(retornoServico != null){
                 Prestadores.findById({_id: retornoServico.pr_id}, (err, prestador) => {
-                    const mergeObj = {servico , prestador}
-                   res.json(mergeObj);
+                   
+                   res.json({
+                       "Serviço": servico,
+                       "Prestador": prestador,
+
+                   });
                 });
                 
             }
