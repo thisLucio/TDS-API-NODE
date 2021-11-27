@@ -108,6 +108,10 @@ router.post('/pedido/avaliar/:id', verify, async (req, res) =>{
     const {error } = avaliarValidation(req.body)
     if(error) return res.status(400).send(error.details[0].message);
 
+    //TRATATIVA PARA BLOQUEAR O USUÁRIO DE FAZER A MESMA AVALIAÇÃO
+    const idAvaliadoExist = await Solicitacao.findOne({pedido_id: req.params.id});
+    if(idAvaliadoExist) return res.status(400).send('Você já avaliou esse pedido ');
+
     const userId = verifyUser(req, res);
 
     Solicitacao.findOne({ user_id: userId, _id: req.params.id}, function(err, pedido){
@@ -132,6 +136,19 @@ router.post('/pedido/avaliar/:id', verify, async (req, res) =>{
     });
 });
 
+// APAGAR AVALIAÇÃO
+router.delete('/pedidos/avaliado/:id', verify, function(req, res){
+    try {
+        Avaliar.findByIdAndDelete({_id: req.params.id}).exec().then(doc => {
+            if(!doc) { return res.status(404).send('Pedido não existe').end();}
+            return res.status(200).send('Pedido removido').end();
+        })
+    }catch(error){
+        return res.status(400).send('Pedido não encontrado');
+    }
+    
+});
+
 //BUSCAR PEDIDO AVALIADO
 router.get('/pedidos/avaliado/:id', verify, function(req, res){
     const userId = verifyUser(req, res);
@@ -143,12 +160,27 @@ router.get('/pedidos/avaliado/:id', verify, function(req, res){
         const retornoPedidos = pedido;
         if(retornoPedidos != null){
             Servico.findOne({ _id: retornoPedidos.servico_id}, function (err, servico){
+                if(err){
+                    res.status(400).send(error.details[0].message);
+                next();
+                }
                 const retornoServico = servico;
                 Prestadores.findById({_id: retornoServico.pr_id}, (err, prestador) => {
+                    if(err){
+                        res.status(400).send(error.details[0].message);
+                    next();
+                    }
                     Avaliar.find({pedido_id: req.params.id }, (err, avaliar) => {
-                        const teste1 = new Array;
-                        let mergeObj = teste1.concat(pedido).concat(servico).concat(prestador).concat(avaliar);
-                       res.send(mergeObj);
+                        if(err){
+                            res.status(400).send(error.details[0].message);
+                        next();
+                        }
+                            res.json({
+                                "pedido": pedido,
+                                "servico": servico,
+                                "prestador": prestador,
+                                "avaliação": avaliar
+                            })
                     });
 
                 });

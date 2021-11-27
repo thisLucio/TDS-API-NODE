@@ -2,6 +2,8 @@ const router = require('express').Router();
 const User = require('../model/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+const verify = require('./verifyToken');
 const {registerValidation, loginValidation } = require ('../validation');
 
 //REGISTER
@@ -70,6 +72,41 @@ router.post('/login', async (req, res) => {
         res.status(400).send('Tem algo errado, só não sei oq é');
     }
    
+});
+
+router.put('/user:id', verify,  async (req, res) =>{
+    const {error } = loginValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
+    //CHECKING IF THE email exists
+    const user = await User.findOne({email: req.body.email});
+    if(!user) return res.status(400).send('Email não foi encontrado ');
+    //CHECKING IF THE password exists
+    const validPass = await bcrypt.compare(req.body.password, user.password);
+    if(!validPass) return res.status(400).send('Invalid password')
+    
+    const conditions = { _id: req.params.id};
+
+    try {
+        const savedServico = await User.updateOne(conditions, req.body);
+        User.findOne({ _id: req.params.id}, function (err, servico){
+            if(err){
+                res.status(400).send(error.details[0].message);
+            next();
+            }
+            const retornoServico = servico;
+
+            if(retornoServico != null){
+                res.json(servico);
+            }
+            else {
+                return res.status(400).send('Usuário não encontrado');
+            }
+       });
+
+   } catch (error) {
+       res.status(400).send(error);
+   }
 });
 
 module.exports = router;

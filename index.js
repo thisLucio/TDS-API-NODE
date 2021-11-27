@@ -8,7 +8,7 @@ const authRoute = require('./routes/auth');
 const servicoRoute = require('./routes/servicoRoute');
 const prestadoresRoute = require('./routes/prestadoresRoute');
 const solicitacaoRoute = require('./routes/solicitacaoServicoRoute');
-
+const mainRoute = require('./routes/mainRoute');
 
 
 dotenv.config();
@@ -20,10 +20,12 @@ mongoose.connect('mongodb+srv://robso:123@api-jwt.717ba.mongodb.net/myFirstDatab
 app.use(express.json());
 app.use(cors());
 //Route Middleware
+
+app.use('/api', mainRoute);
 app.use('/api/user', authRoute);
 app.use('/api', servicoRoute);
 app.use('/api', prestadoresRoute);
 app.use('/api', solicitacaoRoute)
 
 
-app.listen(process.env.PORT || 5000, () => console.log('Server ta rodando menó'));
+app.listen(process.env.PORT || 5000, () => console.log('X API RODANDO'));
