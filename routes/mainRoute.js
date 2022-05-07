@@ -22,5 +22,8 @@ router.get('/', (req, res) => {
      res.sendFile(filepath, { root: '.' });
 });
 
+router.get('/root', (req, res) => {
+   return res.status(200).send('E você é gatinha 😶');
+});
 
 module.exports = router;
